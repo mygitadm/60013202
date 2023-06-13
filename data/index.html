@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ESP8266 Demo</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <script src="/script.js"></script>
+</head>
+<body>
+    <h1>Hello from ESP8266!</h1>
+    <p>Timestamp: <span id='timestamp'></span></p>
+    <p>Temp1: <span id='temp1'></span> &#8451;</p>
+    <p>Temp2: <span id='temp2'></span> &#8451;</p>
+    <p>Soil Moisture: <span id='soilMoisture'></span> &#37;</p>
+    <form action="/setMoisture" method="post">
+        <label for="min_moisture">Set minimum moisture level:</label><br>
+        <input type="number" id="min_moisture" name="min_moisture" min="0" max="100"><br>
+        <label for="max_moisture">Set maximum moisture level:</label><br>
+        <input type="number" id="max_moisture" name="max_moisture" min="0" max="100"><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

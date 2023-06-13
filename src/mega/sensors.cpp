@@ -9,15 +9,14 @@ char substrateMoistureBuffer[SUBSTRATE_MOISTURE_BUFFER_SIZE];
 char substrateMoistureTargetBuffer[SUBSTRATE_MOISTURE_TARGET_BUFFER_SIZE];
 
 Adafruit_BME280 bme;
+
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 DeviceAddress substrateTempSensor = {0x28, 0xED, 0x2E, 0x3C, 0x05, 0x00, 0x00, 0x48};
 DeviceAddress solutionTempSensor = {0x28, 0xB7, 0x1B, 0x3D, 0x05, 0x00, 0x00, 0x70};
 
-//======MOISTURE_SENSOR=====//
-//#define MOISTURE_SENSOR A15
-const int AirValue = 542;   // free air
-const int WaterValue = 211; // water
+
+/*
 int minMoistureSetPoint = 0; // set min moisture
 int maxMoistureSetPoint = 0; // set max moisture
 //==============//
@@ -28,7 +27,7 @@ const float minTemp = 15; // replace with the minimum temperature for humidity r
 const float maxTemp = 30; // replace with the maximum temperature for humidity regulation
 const int minHumidity = 40; // replace with the minimum humidity for low temperature
 const int maxHumidity = 85; // replace with the maximum humidity for high temperature
-
+*/
 void setupSensors()
 {
   sensors.begin();

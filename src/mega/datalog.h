@@ -14,6 +14,6 @@ extern tmElements_t tm;
 
 
 void initializeSDCard();
-void logDataToSD(float solutionTemp, float substrateTemp, float substrateMoisturePercent, float atmosTemp, float atmosHumidity);
+void logDataToSD(time_t timestamp, float solutionTemp, float substrateTemp, float substrateMoisturePercent, float atmosTemp, float atmosHumidity);
 
 #endif
