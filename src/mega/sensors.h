@@ -5,6 +5,11 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <Adafruit_BME280.h>
+#include <ClosedCube_OPT3001.h>
+
+//opt3001
+extern ClosedCube_OPT3001 opt3001;
+#define OPT3001_ADDRESS 0x44
 
 // Define the OneWire bus pin
 #define ONE_WIRE_BUS 26
@@ -42,6 +47,10 @@ extern char substrateMoistureBuffer[SUBSTRATE_MOISTURE_BUFFER_SIZE];
 const uint8_t SUBSTRATE_MOISTURE_TARGET_BUFFER_SIZE = 7; // including space for units and null terminator
 extern char substrateMoistureTargetBuffer[SUBSTRATE_MOISTURE_TARGET_BUFFER_SIZE];
 
+// Define the size of the light intensuty buffer
+const uint8_t LIGHTINTENSITY_BUFFER_SIZE = 10; // Adjust as needed
+extern char lightIntensityBuffer[LIGHTINTENSITY_BUFFER_SIZE];
+
 // Objects for handling sensors
 extern Adafruit_BME280 bme;
 extern OneWire oneWire;
@@ -55,5 +64,9 @@ void getDS18B20Data(float &substrateTemp, float &solutionTemp);
 void getSubstrateMoisture(float &substrateMoisture);
 void formatSensorData(float value, char *buffer, const char* unit);
 float getTargetHumidity(float atmosTemp);
+void getOPT3001Data(float &lightIntensity);
+void configureOPT3001Sensor();
+//void printResult();
+//void printError();
 
 #endif // SENSORS_H

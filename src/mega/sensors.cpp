@@ -7,8 +7,11 @@ char tempSubstrateBuffer[SUBSTRATE_SENSOR_BUFFER_SIZE];
 char tempSolutionBuffer[SOLUTION_SENSOR_BUFFER_SIZE];
 char substrateMoistureBuffer[SUBSTRATE_MOISTURE_BUFFER_SIZE];
 char substrateMoistureTargetBuffer[SUBSTRATE_MOISTURE_TARGET_BUFFER_SIZE];
+char lightIntensityBuffer[LIGHTINTENSITY_BUFFER_SIZE];
 
 Adafruit_BME280 bme;
+
+ClosedCube_OPT3001 opt3001;
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
@@ -35,6 +38,17 @@ void setupSensors()
   // Set the resolution
   sensors.setResolution(substrateTempSensor, 9);
   sensors.setResolution(solutionTempSensor, 9);
+
+  opt3001.begin(OPT3001_ADDRESS);
+	Serial.print("OPT3001 Manufacturer ID");
+	Serial.println(opt3001.readManufacturerID());
+	Serial.print("OPT3001 Device ID");
+	Serial.println(opt3001.readDeviceID());
+
+	configureOPT3001Sensor();
+	//printResult("High-Limit", opt3001.readHighLimit());
+	//printResult("Low-Limit", opt3001.readLowLimit());
+	Serial.println("----");
   // BME280 sensor
   if (!bme.begin(0x77))
   {
@@ -89,3 +103,99 @@ float getTargetHumidity(float atmosTemp) {
     return minHumidity + (maxHumidity - minHumidity) * ((atmosTemp - minTemp) / (maxTemp - minTemp));
   }
 }
+
+/*
+void getOPT3001Data(float &lightIntensity)
+{
+    OPT3001 result = opt3001.readResult();
+    if (result.error == NO_ERROR) {
+        lightIntensity = result.lux;
+    } else {
+        Serial.print("OPT3001 Error: Code #");
+        Serial.println(result.error);
+    }
+}
+*/
+
+void getOPT3001Data(float &lightIntensity)
+{
+    lightIntensity = opt3001.readResult().lux;
+    formatSensorData(lightIntensity, lightIntensityBuffer, "LUX");
+    //dtostrf(lightIntensity, 6, 2, lightIntensityBuffer);  // Convert float to string, adjust as needed
+}
+
+
+void configureOPT3001Sensor() {
+	OPT3001_Config newConfig;
+	
+	newConfig.RangeNumber = B1100;	
+	newConfig.ConvertionTime = B0;
+	newConfig.Latch = B1;
+	newConfig.ModeOfConversionOperation = B11;
+
+	OPT3001_ErrorCode errorConfig = opt3001.writeConfig(newConfig);
+	if (errorConfig != NO_ERROR)
+    Serial.println("OPT3001 configuration");
+		//printError("OPT3001 configuration", errorConfig);
+	else {
+		OPT3001_Config sensorConfig = opt3001.readConfig();
+		Serial.println("OPT3001 Current Config:");
+		Serial.println("------------------------------");
+		
+		Serial.print("Conversion ready (R):");
+		Serial.println(sensorConfig.ConversionReady,HEX);
+
+		Serial.print("Conversion time (R/W):");
+		Serial.println(sensorConfig.ConvertionTime, HEX);
+
+		Serial.print("Fault count field (R/W):");
+		Serial.println(sensorConfig.FaultCount, HEX);
+
+		Serial.print("Flag high field (R-only):");
+		Serial.println(sensorConfig.FlagHigh, HEX);
+
+		Serial.print("Flag low field (R-only):");
+		Serial.println(sensorConfig.FlagLow, HEX);
+
+		Serial.print("Latch field (R/W):");
+		Serial.println(sensorConfig.Latch, HEX);
+
+		Serial.print("Mask exponent field (R/W):");
+		Serial.println(sensorConfig.MaskExponent, HEX);
+
+		Serial.print("Mode of conversion operation (R/W):");
+		Serial.println(sensorConfig.ModeOfConversionOperation, HEX);
+
+		Serial.print("Polarity field (R/W):");
+		Serial.println(sensorConfig.Polarity, HEX);
+
+		Serial.print("Overflow flag (R-only):");
+		Serial.println(sensorConfig.OverflowFlag, HEX);
+
+		Serial.print("Range number (R/W):");
+		Serial.println(sensorConfig.RangeNumber, HEX);
+
+		Serial.println("------------------------------");
+	}
+	
+}
+/*
+void printResult(String text, OPT3001 result) {
+	if (result.error == NO_ERROR) {
+		Serial.print(text);
+		Serial.print(": ");
+		Serial.print(result.lux);
+		Serial.println(" lux");
+	}
+	else {
+		printError(text,result.error);
+	}
+}
+
+void printError(String text, OPT3001_ErrorCode error) {
+	Serial.print(text);
+	Serial.print(": [ERROR] Code #");
+	Serial.println(error);
+}
+*/
+

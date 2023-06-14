@@ -24,6 +24,9 @@ extern const uint8_t SOLUTION_TEMP_POS_Y;
 extern const uint8_t SUBSTRATE_MOISTURE_POS_X;
 extern const uint8_t SUBSTRATE_MOISTURE_POS_Y;
 
+extern const uint8_t LIGHTINTENSITY_POS_X;
+extern const uint8_t LIGHTINTENSITY_POS_Y;
+
 extern const uint8_t TIME_BUFFER_SIZE;
 extern const uint8_t DATE_BUFFER_SIZE;
 extern char timeBuffer[];
@@ -44,6 +47,9 @@ extern char substrateMoistureBuffer[];
 
 extern const uint8_t SUBSTRATE_MOISTURE_TARGET_BUFFER_SIZE;
 extern char substrateMoistureTargetBuffer[];
+
+extern const uint8_t LIGHTINTENSITY_BUFFER_SIZE;
+extern char lightIntensityBuffer[];
 
 void draw();
 

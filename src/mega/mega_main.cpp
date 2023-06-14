@@ -68,6 +68,10 @@ void getDateTime();
 void transmitData(time_t timestamp, float solutionTemp, float substrateTemp, float substrateMoisturePercent, float atmosTemp, float atmosHumidity);
 void transmitDataHistorical(time_t timestamp, float solutionTemp, float substrateTemp, float substrateMoisturePercent, float atmosTemp, float atmosHumidity);
 void logDataToSD(time_t timestamp, float solutionTemp, float substrateTemp, float substrateMoisturePercent, float atmosTemp, float atmosHumidity);
+void getOPT3001Data(float &lightIntensity);
+void configureSensor();
+//void printResult();
+//void printError();
 void setupPump();
 void setupDisplay();
 void draw();
@@ -191,6 +195,11 @@ void loop()
   float targetMoisture = getTargetHumidity(atmosTemp);
   formatSensorData(targetMoisture, substrateMoistureTargetBuffer, "%");
 
+  float lightIntensity;
+  getOPT3001Data(lightIntensity);
+  /*Serial.print("Light Intensity: ");
+  Serial.print(lightIntensity);
+  Serial.println(" lux");*/
   
   updateWatering(atmosTemp, substrateMoisture);
 

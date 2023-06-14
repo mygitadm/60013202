@@ -56,65 +56,61 @@ void initializeWiFi() {
     delay(500);
   }
 }
+
 ///======how to detect sd card removal?===///
 void logDataToSD(time_t timestamp, float solutionTemp, float substrateTemp, float substrateMoisturePercent, float atmosTemp, float atmosHumidity)
 {
-
   if (!sdCardPresent || fileInUse)
   {
     Serial.println("error - SD card doesn't present or in use");
     return;
   }
-  
- 
 
   fileInUse = true;
 
-  // Check if the file exists and create it with headers if it doesn't
+  // Check if infoLog.csv file exists and if not, create it with headers
   if (!SD.exists("infoLog.csv"))
   {
     File dataFile = SD.open("infoLog.csv", FILE_WRITE);
-    if (dataFile)
-    {
-      dataFile.println("Timestamp,SolutionTemp,SubstrateTemp,AtmosTemp,AtmosHumidity,SubstrateMoisturePercent");
-      dataFile.close();
-    }
-    else
+    if (!dataFile)
     {
       Serial.println("error creating infoLog.csv");
       fileInUse = false;
-      return; // If the file couldn't be created, exit the function
+      return;
     }
-  }
-
-  File dataFile = SD.open("infoLog.csv", FILE_WRITE);
-
-  if (dataFile)
-  {
-    // Convert timestamp to tm structure
-    tmElements_t tm;
-    breakTime(timestamp, tm);
-
-    // ISO 8601 timestamp format
-    char timestamp_str[25];
-    snprintf(timestamp_str, sizeof(timestamp_str), "%04d-%02d-%02dT%02d:%02d",
-             tmYearToCalendar(tm.Year), tm.Month, tm.Day, tm.Hour, tm.Minute);
-
-    // CSV format
-    dataFile.print(String(timestamp_str) + ",");
-    dataFile.print(String(solutionTemp) + ",");
-    dataFile.print(String(substrateTemp) + ",");
-    dataFile.print(String(atmosTemp) + ",");
-    dataFile.print(String(atmosHumidity) + ",");
-    dataFile.println(String(substrateMoisturePercent));
-
+    dataFile.println("Timestamp,SolutionTemp,SubstrateTemp,AtmosTemp,AtmosHumidity,SubstrateMoisturePercent");
     dataFile.close();
-    Serial.println("logging has been occurred");
   }
-  else
+
+  // Open file infoLog.csv to write data
+  File dataFile = SD.open("infoLog.csv", FILE_WRITE);
+  if (!dataFile)
   {
     Serial.println("error opening infoLog.csv");
+    fileInUse = false;
+    return;
   }
+
+  // Convert timestamp to tm structure
+  tmElements_t tm;
+  breakTime(timestamp, tm);
+
+  // Format timestamp in ISO 8601 format
+  char timestamp_str[25];
+  snprintf(timestamp_str, sizeof(timestamp_str), "%04d-%02d-%02dT%02d:%02d",
+           tmYearToCalendar(tm.Year), tm.Month, tm.Day, tm.Hour, tm.Minute);
+
+  // Write data in CSV format
+  dataFile.print(String(timestamp_str) + ",");
+  dataFile.print(String(solutionTemp) + ",");
+  dataFile.print(String(substrateTemp) + ",");
+  dataFile.print(String(atmosTemp) + ",");
+  dataFile.print(String(atmosHumidity) + ",");
+  dataFile.println(String(substrateMoisturePercent));
+
+  dataFile.close();
+  Serial.println("logging has been occurred");
+
   fileInUse = false;
 }
 

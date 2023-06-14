@@ -15,14 +15,16 @@ const uint8_t ATMOS_TEMP_POS_Y = 24;
 
 const uint8_t SUBSTRATE_MOISTURE_TARGET_POS_X = 10;
 const uint8_t SUBSTRATE_MOISTURE_TARGET_POS_Y = 36;
+const uint8_t SUBSTRATE_MOISTURE_POS_X = 60;
+const uint8_t SUBSTRATE_MOISTURE_POS_Y = 36;
 
 const uint8_t SUBSTRATE_TEMP_POS_X = 10;
 const uint8_t SUBSTRATE_TEMP_POS_Y = 48;
 const uint8_t SOLUTION_TEMP_POS_X = 60;
 const uint8_t SOLUTION_TEMP_POS_Y = 48;
 
-const uint8_t SUBSTRATE_MOISTURE_POS_X = 10;
-const uint8_t SUBSTRATE_MOISTURE_POS_Y = 60;
+const uint8_t LIGHTINTENSITY_POS_X = 10;
+const uint8_t LIGHTINTENSITY_POS_Y = 60;
 
 void setupDisplay()
 {
@@ -43,5 +45,6 @@ void draw()
     u8g2.drawStr(SUBSTRATE_TEMP_POS_X, SUBSTRATE_TEMP_POS_Y, tempSubstrateBuffer);
     u8g2.drawStr(SOLUTION_TEMP_POS_X, SOLUTION_TEMP_POS_Y, tempSolutionBuffer);
     u8g2.drawStr(SUBSTRATE_MOISTURE_POS_X, SUBSTRATE_MOISTURE_POS_Y, substrateMoistureBuffer);
+    u8g2.drawStr(LIGHTINTENSITY_POS_X, LIGHTINTENSITY_POS_Y, lightIntensityBuffer); // Add this line
   } while (u8g2.nextPage());
 }
