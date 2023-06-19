@@ -2,6 +2,13 @@
 
 #include "datalog.h"
 
+unsigned long lastLogTime = 0;
+const unsigned long logInterval = 60 * 1000L;
+bool sdCardPresent = false;
+const int chipSelect = 4;
+File infoLog;
+bool fileInUse = false;
+
 void initializeSDCard()
 {
   if (!SD.begin(chipSelect))

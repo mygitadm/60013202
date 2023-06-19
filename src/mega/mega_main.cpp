@@ -17,29 +17,6 @@
 #include "sensors.h"
 #include "settings.h"
 
-// Define display refresh rate
-unsigned long lastDisplayUpdate = 0;
-const unsigned long displayRefreshInterval = 250;
-
-// tmElements_t tm;
-const char *monthName[12] = {
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-};
-
-
-
-//========Data logging to SD card=======//
-static unsigned long lastLogTime = 0;
-const unsigned long logInterval = 60 * 1000L; // Log every 60 seconds
-
-bool sdCardPresent = false;
-const int chipSelect = 4;
-//csv file
-File infoLog;
-//file use flag
-bool fileInUse = false;
-
 //=========L293D=========//
 unsigned long lastPumpOnTime = 0; // 
 const unsigned long pumpOnInterval = 60000; //
@@ -47,34 +24,18 @@ const int MOTOR_SPEED_PIN = 44;
 const int MOTOR_CONTROL_PIN1 = 43;
 const int MOTOR_CONTROL_PIN2 = 42;
 
-
-
 //=========relay=======//
 
 //relay
 #define relayPin 48
 
 // Function prototypes
-void setupSensors();
-void setupRTC();
-bool getTime(const char *str);
-bool getDate(const char *str);
-void getBME280Data(float &atmosTemp, float &atmosHumidity);
-void getDS18B20Data(float &substrateTemp, float &solutionTemp);
-void getSubstrateMoisture(float &substrateMoisture);
-void initializeSDCard();
-void formatSensorData(float value, char *buffer, const char* unit);
-void getDateTime();
+
 void transmitData(time_t timestamp, float solutionTemp, float substrateTemp, float substrateMoisturePercent, float atmosTemp, float atmosHumidity);
 void transmitDataHistorical(time_t timestamp, float solutionTemp, float substrateTemp, float substrateMoisturePercent, float atmosTemp, float atmosHumidity);
-void logDataToSD(time_t timestamp, float solutionTemp, float substrateTemp, float substrateMoisturePercent, float atmosTemp, float atmosHumidity);
-void getOPT3001Data(float &lightIntensity);
-void configureSensor();
-//void printResult();
-//void printError();
+
 void setupPump();
-void setupDisplay();
-void draw();
+
 
 void setup()
 {
@@ -86,7 +47,6 @@ void setup()
   initializeSDCard();
   setupPump();
   pinMode(relayPin, OUTPUT);
-  //u8g2.begin();
   setupDisplay();
 }
 
@@ -203,6 +163,8 @@ void loop()
   
   updateWatering(atmosTemp, substrateMoisture);
 
+  updateDisplay();
+
   if (Serial1.available())
   {
     String input = Serial1.readStringUntil('\n');
@@ -220,13 +182,6 @@ void loop()
       transmitDataHistorical(timestamp, solutionTemp, substrateTemp, substrateMoisture, atmosTemp, atmosHumidity);
     }
   }
-
-  if (currentTime - lastDisplayUpdate >= displayRefreshInterval)
-  {
-    draw();
-    lastDisplayUpdate = currentTime;
-  }
-
   if (currentTime - lastLogTime >= logInterval)
   {
     logDataToSD(timestamp, solutionTemp, substrateTemp, substrateMoisture, atmosTemp, atmosHumidity);

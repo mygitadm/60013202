@@ -3,7 +3,10 @@
 #include <DS1307RTC.h>
 #include "RTC.h"
 
+time_t timestamp;
+const char *monthName[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 tmElements_t tm;
+
 const uint8_t TIME_BUFFER_SIZE = 9;
 const uint8_t DATE_BUFFER_SIZE = 20;
 char timeBuffer[TIME_BUFFER_SIZE];

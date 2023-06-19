@@ -4,11 +4,13 @@
 #include <SPI.h>
 #include <SD.h>
 
+
+extern unsigned long lastLogTime;
 extern const unsigned long logInterval;
 extern bool sdCardPresent;
-extern bool fileInUse;
 extern const int chipSelect;
 extern File infoLog;
+extern bool fileInUse;
 
 extern tmElements_t tm;
 

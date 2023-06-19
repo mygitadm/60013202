@@ -3,6 +3,9 @@
 
 #include <U8g2lib.h>
 
+extern unsigned long lastDisplayUpdate;
+extern const unsigned long displayRefreshInterval;
+
 extern const uint8_t TIME_POS_X;
 extern const uint8_t TIME_POS_Y;
 extern const uint8_t DATE_POS_X;
@@ -51,6 +54,8 @@ extern char substrateMoistureTargetBuffer[];
 extern const uint8_t LIGHTINTENSITY_BUFFER_SIZE;
 extern char lightIntensityBuffer[];
 
+void setupDisplay();
+void updateDisplay();
 void draw();
 
 #endif

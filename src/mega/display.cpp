@@ -2,6 +2,9 @@
 
 //=========ST7920=========//
 U8G2_ST7920_128X64_1_SW_SPI u8g2(U8G2_R0, /* clock=*/ 22, /* data=*/ 23, /* CS=*/ 24, /* reset=*/ 25);
+// Define display refresh rate
+unsigned long lastDisplayUpdate = 0;
+const unsigned long displayRefreshInterval = 250;
 
 const uint8_t TIME_POS_X = 0;
 const uint8_t TIME_POS_Y = 12;
@@ -29,6 +32,15 @@ const uint8_t LIGHTINTENSITY_POS_Y = 60;
 void setupDisplay()
 {
   u8g2.begin();
+}
+
+void updateDisplay() {
+  unsigned long currentTime = millis();
+  if (currentTime - lastDisplayUpdate >= displayRefreshInterval)
+  {
+    draw();
+    lastDisplayUpdate = currentTime;
+  }
 }
 
 void draw()

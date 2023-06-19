@@ -4,7 +4,10 @@
 #include <TimeLib.h>
 #include <DS1307RTC.h>
 
+extern time_t timestamp;
+extern const char *monthName[12];
 extern tmElements_t tm;
+
 extern const uint8_t TIME_BUFFER_SIZE;
 extern const uint8_t DATE_BUFFER_SIZE;
 extern char timeBuffer[];
