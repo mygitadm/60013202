@@ -94,7 +94,7 @@ void formatSensorData(float value, char *buffer, const char* unit) {
     strcat(buffer, unit);
 }
 
-float getTargetHumidity(float atmosTemp) {
+float getSubstrateTargetMoisture(float atmosTemp) {
   if (atmosTemp <= minTemp) {
     return minHumidity;
   } else if (atmosTemp >= maxTemp) {

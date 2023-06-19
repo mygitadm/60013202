@@ -111,7 +111,7 @@ void transmitDataHistorical(time_t timestamp, float solutionTemp, float substrat
 }
 
 void updateWatering(float atmosTemp, float substrateMoisture) {
-  float targetHumidity = getTargetHumidity(atmosTemp);
+  float targetHumidity = getSubstrateTargetMoisture(atmosTemp);
   if (substrateMoisture < targetHumidity) {
     digitalWrite(relayPin, HIGH);
   } else {
@@ -152,8 +152,8 @@ void loop()
   float substrateMoisture;
   getSubstrateMoisture(substrateMoisture);
 
-  float targetMoisture = getTargetHumidity(atmosTemp);
-  formatSensorData(targetMoisture, substrateMoistureTargetBuffer, "%");
+  float substrateTargetMoisture = getSubstrateTargetMoisture(atmosTemp);
+  formatSensorData(substrateTargetMoisture, substrateMoistureTargetBuffer, "%");
 
   float lightIntensity;
   getOPT3001Data(lightIntensity);
