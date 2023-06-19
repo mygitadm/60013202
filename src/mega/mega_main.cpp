@@ -62,8 +62,7 @@ void setupPump() {
 
 void transmitData(time_t timestamp, float solutionTemp, float substrateTemp, float substrateMoisturePercent, float atmosTemp, float atmosHumidity)
 {
-  //time_t timestamp = now();
-
+  char buffer[6];
   // Create JSON document
   StaticJsonDocument<200> doc;
 
@@ -73,7 +72,9 @@ void transmitData(time_t timestamp, float solutionTemp, float substrateTemp, flo
   doc["solutionTemp"] = solutionTemp;
   doc["substrateTemp"] = substrateTemp;
   doc["atmosTemp"] = atmosTemp;
-  doc["atmosHumidity"] = atmosHumidity;
+  //doc["atmosHumidity"] = atmosHumidity;
+  dtostrf(atmosHumidity, 4, 1, buffer);
+  doc["atmosHumidity"] = buffer;
   doc["substrateMoisture"] = substrateMoisturePercent;
 
   // Transmit JSON via Serial to ESP8266
@@ -87,18 +88,19 @@ void transmitData(time_t timestamp, float solutionTemp, float substrateTemp, flo
 
 void transmitDataHistorical(time_t timestamp, float solutionTemp, float substrateTemp, float substrateMoisturePercent, float atmosTemp, float atmosHumidity)
 {
-  //time_t timestamp = now();
+  char buffer[6];
 
   // Create JSON document
   StaticJsonDocument<200> doc;
-
+  
   // Add values to JSON document
   doc["dataType"] = "historical";
   doc["timestamp"] = timestamp;
   doc["solutionTemp"] = solutionTemp;
   doc["substrateTemp"] = substrateTemp;
   doc["atmosTemp"] = atmosTemp;
-  doc["atmosHumidity"] = atmosHumidity;
+  dtostrf(atmosHumidity, 4, 1, buffer);
+  doc["atmosHumidity"] = buffer;
   doc["substrateMoisture"] = substrateMoisturePercent;
 
   // Transmit JSON via Serial to ESP8266
@@ -111,7 +113,8 @@ void transmitDataHistorical(time_t timestamp, float solutionTemp, float substrat
 }
 
 void updateWatering(float atmosTemp, float substrateMoisture) {
-  float targetHumidity = getSubstrateTargetMoisture(atmosTemp);
+  float targetHumidity;
+  getSubstrateMoistureTarget(atmosTemp, targetHumidity);
   if (substrateMoisture < targetHumidity) {
     digitalWrite(relayPin, HIGH);
   } else {
@@ -152,8 +155,8 @@ void loop()
   float substrateMoisture;
   getSubstrateMoisture(substrateMoisture);
 
-  float substrateTargetMoisture = getSubstrateTargetMoisture(atmosTemp);
-  formatSensorData(substrateTargetMoisture, substrateMoistureTargetBuffer, "%");
+  float substrateMoistureTarget;
+  getSubstrateMoistureTarget(atmosTemp, substrateMoistureTarget);
 
   float lightIntensity;
   getOPT3001Data(lightIntensity);

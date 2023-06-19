@@ -19,18 +19,6 @@ DeviceAddress substrateTempSensor = {0x28, 0xED, 0x2E, 0x3C, 0x05, 0x00, 0x00, 0
 DeviceAddress solutionTempSensor = {0x28, 0xB7, 0x1B, 0x3D, 0x05, 0x00, 0x00, 0x70};
 
 
-/*
-int minMoistureSetPoint = 0; // set min moisture
-int maxMoistureSetPoint = 0; // set max moisture
-//==============//
-
-//=======Amtos temp and substrate moisture range to calc target moisture =====//
-
-const float minTemp = 15; // replace with the minimum temperature for humidity regulation
-const float maxTemp = 30; // replace with the maximum temperature for humidity regulation
-const int minHumidity = 40; // replace with the minimum humidity for low temperature
-const int maxHumidity = 85; // replace with the maximum humidity for high temperature
-*/
 void setupSensors()
 {
   sensors.begin();
@@ -93,29 +81,18 @@ void formatSensorData(float value, char *buffer, const char* unit) {
     dtostrf(value, 4, 1, buffer);
     strcat(buffer, unit);
 }
-
-float getSubstrateTargetMoisture(float atmosTemp) {
+void getSubstrateMoistureTarget(float atmosTemp, float &targetMoisture) {
   if (atmosTemp <= minTemp) {
-    return minHumidity;
+    targetMoisture = minHumidity;
   } else if (atmosTemp >= maxTemp) {
-    return maxHumidity;
+    targetMoisture = maxHumidity;
   } else {
-    return minHumidity + (maxHumidity - minHumidity) * ((atmosTemp - minTemp) / (maxTemp - minTemp));
+    targetMoisture = minHumidity + (maxHumidity - minHumidity) * ((atmosTemp - minTemp) / (maxTemp - minTemp));
   }
+  formatSensorData(targetMoisture, substrateMoistureTargetBuffer, "%");
 }
 
-/*
-void getOPT3001Data(float &lightIntensity)
-{
-    OPT3001 result = opt3001.readResult();
-    if (result.error == NO_ERROR) {
-        lightIntensity = result.lux;
-    } else {
-        Serial.print("OPT3001 Error: Code #");
-        Serial.println(result.error);
-    }
-}
-*/
+
 
 void getOPT3001Data(float &lightIntensity)
 {

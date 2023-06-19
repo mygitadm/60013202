@@ -63,7 +63,7 @@ void getBME280Data(float &atmosTemp, float &atmosHumidity);
 void getDS18B20Data(float &substrateTemp, float &solutionTemp);
 void getSubstrateMoisture(float &substrateMoisture);
 void formatSensorData(float value, char *buffer, const char* unit);
-float getSubstrateTargetMoisture(float atmosTemp);
+void getSubstrateMoistureTarget(float atmosTemp, float &targetMoisture);
 void getOPT3001Data(float &lightIntensity);
 void configureOPT3001Sensor();
 //void printResult();
