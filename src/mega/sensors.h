@@ -25,8 +25,9 @@ extern int maxMoistureSetPoint;// set max moisture
 
 extern const float minTemp; // replace with the minimum temperature for humidity regulation
 extern const float maxTemp; // replace with the maximum temperature for humidity regulation
-extern const int minHumidity; // replace with the minimum humidity for low temperature
-extern const int maxHumidity; // replace with the maximum humidity for high temperature
+//extern const int minHumidity; // replace with the minimum humidity for low temperature
+//extern const int maxHumidity; // replace with the maximum humidity for high temperature
+
 
 // Define the size of the temperature and humidity buffers BME280
 const uint8_t TEMP_BUFFER_SIZE = 7; // including space for units and null terminator
@@ -64,7 +65,7 @@ void getBME280Data(float &atmosTemp, float &atmosHumidity);
 void getDS18B20Data(float &substrateTemp, float &solutionTemp);
 void getSubstrateMoisture(float &substrateMoisture);
 void formatSensorData(float value, char *buffer, const char* unit);
-void getSubstrateMoistureTarget(float atmosTemp, float &targetMoisture);
+void getSubstrateMoistureTarget(float atmosTemp, float lightIntensity, float &targetMoisture);
 void getOPT3001Data(float &lightIntensity);
 void configureOPT3001Sensor();
 //void printResult();

@@ -62,8 +62,13 @@ void transmitConfig() {
   doc["dataType"] = "config";
   doc["minTemp"] = minTemp;
   doc["maxTemp"] = maxTemp;
-  doc["minHumidity"] = minHumidity;
-  doc["maxHumidity"] = maxHumidity;
+  doc["minHumiditySeedling"] = minHumiditySeedling;
+  doc["maxHumiditySeedling"] = maxHumiditySeedling;
+  doc["minHumidityVegetative"] = minHumidityVegetative;
+  doc["maxHumidityVegetative"] = maxHumidityVegetative;
+  doc["minHumidityFruitBearing"] = minHumidityFruitBearing;
+  doc["maxHumidityFruitBearing"] = maxHumidityVegetative;
+  doc["currentGrowthStage"] = currentGrowthStage;
 
   // Transmit JSON via Serial1 to ESP8266
   serializeJson(doc, Serial1);

@@ -45,17 +45,19 @@ void loop()
   getDS18B20Data(substrateTemp, solutionTemp);
   float substrateMoisture;
   getSubstrateMoisture(substrateMoisture);
-
-  float substrateMoistureTarget;
-  getSubstrateMoistureTarget(atmosTemp, substrateMoistureTarget);
-
+  
   float lightIntensity;
   getOPT3001Data(lightIntensity);
   /*Serial.print("Light Intensity: ");
   Serial.print(lightIntensity);
   Serial.println(" lux");*/
+
+  float substrateMoistureTarget;
+  //getSubstrateMoistureTarget(atmosTemp, substrateMoistureTarget);
+  getSubstrateMoistureTarget(atmosTemp, lightIntensity, substrateMoistureTarget);
   
-  updateWatering(atmosTemp, substrateMoisture);
+  //updateWatering(atmosTemp, substrateMoisture);
+  updateWatering(atmosTemp, substrateMoisture, lightIntensity);
 
   updateDisplay();
 

@@ -16,7 +16,8 @@ extern const int MOTOR_CONTROL_PIN2;
 #define relayPin 48
 
 void setupPump();
-void updateWatering(float atmosTemp, float substrateMoisture);
+//void updateWatering(float atmosTemp, float substrateMoisture);
+void updateWatering(float atmosTemp, float substrateMoisture, float lightIntensity);
 
 
 

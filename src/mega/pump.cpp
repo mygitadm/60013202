@@ -2,6 +2,7 @@
 #include "sensors.h"
 
 
+
 unsigned long lastPumpOnTime = 0;
 const unsigned long pumpOnInterval = 60000;
 
@@ -40,7 +41,28 @@ void controlRelay(bool state) {
   }
 }
 
+void updateWatering(float atmosTemp, float substrateMoisture, float lightIntensity) {
+  float targetHumidity;
+  float hysteresis = 3.0; // Adjust as needed
+  getSubstrateMoistureTarget(atmosTemp, lightIntensity, targetHumidity);
+  static bool pumpState = false; // Keep track of the pump state
 
+  if (millis() - startTime > 5000) { // Wait for 5 seconds after reboot
+  // Existing pump control logic
+  if (!pumpState && substrateMoisture < targetHumidity - hysteresis) {
+    controlPump(true);
+    controlRelay(true);
+    pumpState = true;
+  } else if (pumpState && substrateMoisture > targetHumidity) {
+    controlPump(false);
+    controlRelay(false);
+    pumpState = false;
+  }
+}
+}
+
+
+/*
 void updateWatering(float atmosTemp, float substrateMoisture) {
   float targetHumidity;
   float hysteresis = 3.0; // Adjust as needed
@@ -60,3 +82,4 @@ void updateWatering(float atmosTemp, float substrateMoisture) {
   }
 }
 }
+*/
