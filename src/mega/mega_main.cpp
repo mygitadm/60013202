@@ -16,7 +16,9 @@
 #include "RTC.h"
 #include "sensors.h"
 #include "settings.h"
-
+#include "transmit.h"
+#include "pump.h"
+/*
 //=========L293D=========//
 unsigned long lastPumpOnTime = 0; // 
 const unsigned long pumpOnInterval = 60000; //
@@ -31,11 +33,10 @@ const int MOTOR_CONTROL_PIN2 = 42;
 
 // Function prototypes
 
-void transmitData(time_t timestamp, float solutionTemp, float substrateTemp, float substrateMoisturePercent, float atmosTemp, float atmosHumidity);
-void transmitDataHistorical(time_t timestamp, float solutionTemp, float substrateTemp, float substrateMoisturePercent, float atmosTemp, float atmosHumidity);
+
 
 void setupPump();
-
+*/
 
 void setup()
 {
@@ -49,7 +50,7 @@ void setup()
   pinMode(relayPin, OUTPUT);
   setupDisplay();
 }
-
+/*
 void setupPump() {
   // Initialize motor control pins
   pinMode(MOTOR_SPEED_PIN, OUTPUT);
@@ -60,57 +61,6 @@ void setupPump() {
   analogWrite(MOTOR_SPEED_PIN, 255);
 }
 
-void transmitData(time_t timestamp, float solutionTemp, float substrateTemp, float substrateMoisturePercent, float atmosTemp, float atmosHumidity)
-{
-  char buffer[6];
-  // Create JSON document
-  StaticJsonDocument<200> doc;
-
-  // Add values to JSON document
-  doc["dataType"] = "realtime";
-  doc["timestamp"] = timestamp;
-  doc["solutionTemp"] = solutionTemp;
-  doc["substrateTemp"] = substrateTemp;
-  doc["atmosTemp"] = atmosTemp;
-  //doc["atmosHumidity"] = atmosHumidity;
-  dtostrf(atmosHumidity, 4, 1, buffer);
-  doc["atmosHumidity"] = buffer;
-  doc["substrateMoisture"] = substrateMoisturePercent;
-
-  // Transmit JSON via Serial to ESP8266
-  serializeJson(doc, Serial1);
-  Serial1.println();
-
-  // Print the same JSON to Serial for debugging
-  serializeJson(doc, Serial);
-  Serial.println();
-}
-
-void transmitDataHistorical(time_t timestamp, float solutionTemp, float substrateTemp, float substrateMoisturePercent, float atmosTemp, float atmosHumidity)
-{
-  char buffer[6];
-
-  // Create JSON document
-  StaticJsonDocument<200> doc;
-  
-  // Add values to JSON document
-  doc["dataType"] = "historical";
-  doc["timestamp"] = timestamp;
-  doc["solutionTemp"] = solutionTemp;
-  doc["substrateTemp"] = substrateTemp;
-  doc["atmosTemp"] = atmosTemp;
-  dtostrf(atmosHumidity, 4, 1, buffer);
-  doc["atmosHumidity"] = buffer;
-  doc["substrateMoisture"] = substrateMoisturePercent;
-
-  // Transmit JSON via Serial to ESP8266
-  serializeJson(doc, Serial1);
-  Serial1.println();
-
-  // Print the same JSON to Serial for debugging
-  serializeJson(doc, Serial);
-  Serial.println();
-}
 
 void updateWatering(float atmosTemp, float substrateMoisture) {
   float targetHumidity;
@@ -121,28 +71,7 @@ void updateWatering(float atmosTemp, float substrateMoisture) {
     digitalWrite(relayPin, LOW);
   }
 }
-
-void transmitConfig() {
-  // Create JSON document
-  StaticJsonDocument<200> doc;
-
-  // Add values to JSON document
-  doc["dataType"] = "config";
-  doc["minTemp"] = minTemp;
-  doc["maxTemp"] = maxTemp;
-  doc["minHumidity"] = minHumidity;
-  doc["maxHumidity"] = maxHumidity;
-
-  // Transmit JSON via Serial1 to ESP8266
-  serializeJson(doc, Serial1);
-  Serial1.println();
-
-  // Print the same JSON to Serial for debugging
-  serializeJson(doc, Serial);
-  Serial.println();
-}
-  
-
+*/
 void loop()
 {
   time_t timestamp = now();
