@@ -11,6 +11,7 @@
 #include <SPI.h>
 #include <SD.h>
 
+
 #include "display.h"
 #include "datalog.h"
 #include "RTC.h"
@@ -18,25 +19,6 @@
 #include "settings.h"
 #include "transmit.h"
 #include "pump.h"
-/*
-//=========L293D=========//
-unsigned long lastPumpOnTime = 0; // 
-const unsigned long pumpOnInterval = 60000; //
-const int MOTOR_SPEED_PIN = 44;
-const int MOTOR_CONTROL_PIN1 = 43;
-const int MOTOR_CONTROL_PIN2 = 42;
-
-//=========relay=======//
-
-//relay
-#define relayPin 48
-
-// Function prototypes
-
-
-
-void setupPump();
-*/
 
 void setup()
 {
@@ -49,29 +31,9 @@ void setup()
   setupPump();
   pinMode(relayPin, OUTPUT);
   setupDisplay();
-}
-/*
-void setupPump() {
-  // Initialize motor control pins
-  pinMode(MOTOR_SPEED_PIN, OUTPUT);
-  pinMode(MOTOR_CONTROL_PIN1, OUTPUT);
-  pinMode(MOTOR_CONTROL_PIN2, OUTPUT);
-  
-  // Set default speed to 100%
-  analogWrite(MOTOR_SPEED_PIN, 255);
+  delay(1000);
 }
 
-
-void updateWatering(float atmosTemp, float substrateMoisture) {
-  float targetHumidity;
-  getSubstrateMoistureTarget(atmosTemp, targetHumidity);
-  if (substrateMoisture < targetHumidity) {
-    digitalWrite(relayPin, HIGH);
-  } else {
-    digitalWrite(relayPin, LOW);
-  }
-}
-*/
 void loop()
 {
   time_t timestamp = now();

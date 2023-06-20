@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
+
+
 //=========L293D=========//
 extern unsigned long lastPumpOnTime;
 extern const unsigned long pumpOnInterval;
@@ -15,5 +17,8 @@ extern const int MOTOR_CONTROL_PIN2;
 
 void setupPump();
 void updateWatering(float atmosTemp, float substrateMoisture);
+
+
+
 
 #endif // PUMP_H

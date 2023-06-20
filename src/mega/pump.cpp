@@ -1,11 +1,15 @@
 #include "pump.h"
 #include "sensors.h"
 
+
 unsigned long lastPumpOnTime = 0;
 const unsigned long pumpOnInterval = 60000;
+
+unsigned long startTime = millis();
 const int MOTOR_SPEED_PIN = 44;
 const int MOTOR_CONTROL_PIN1 = 43;
 const int MOTOR_CONTROL_PIN2 = 42;
+
 
 void setupPump() {
   // Initialize motor control pins
@@ -16,30 +20,7 @@ void setupPump() {
   // Set default speed to 100%
   analogWrite(MOTOR_SPEED_PIN, 255);
 }
-/* //==relay==//
-void updateWatering(float atmosTemp, float substrateMoisture) {
-  float targetHumidity;
-  getSubstrateMoistureTarget(atmosTemp, targetHumidity);
-  if (substrateMoisture < targetHumidity) {
-    digitalWrite(relayPin, HIGH);
-  } else {
-    digitalWrite(relayPin, LOW);
-  }
-}
-*/
-/* //==L293D==//
-void updateWatering(float atmosTemp, float substrateMoisture) {
-  float targetHumidity;
-  getSubstrateMoistureTarget(atmosTemp, targetHumidity);
-  if (substrateMoisture < targetHumidity) {
-    digitalWrite(MOTOR_CONTROL_PIN1, HIGH); // Turn ON the water pump
-    digitalWrite(MOTOR_CONTROL_PIN2, LOW);
-  } else {
-    digitalWrite(MOTOR_CONTROL_PIN1, LOW); // Turn OFF the water pump
-    digitalWrite(MOTOR_CONTROL_PIN2, LOW);
-  }
-}
-*/
+
 
 void controlPump(bool state) {
   if (state) {
@@ -58,33 +39,24 @@ void controlRelay(bool state) {
     digitalWrite(relayPin, LOW); // Turn OFF the relay
   }
 }
+
+
 void updateWatering(float atmosTemp, float substrateMoisture) {
   float targetHumidity;
-  float hysteresis = 5.0; // Adjust as needed
+  float hysteresis = 3.0; // Adjust as needed
   getSubstrateMoistureTarget(atmosTemp, targetHumidity);
   static bool pumpState = false; // Keep track of the pump state
 
+  if (millis() - startTime > 5000) { // Wait for 5 seconds after reboot
+  // Existing pump control logic
   if (!pumpState && substrateMoisture < targetHumidity - hysteresis) {
     controlPump(true);
     controlRelay(true);
     pumpState = true;
-  } else if (pumpState && substrateMoisture > targetHumidity + hysteresis) {
+  } else if (pumpState && substrateMoisture > targetHumidity) {
     controlPump(false);
     controlRelay(false);
     pumpState = false;
   }
 }
-
-/*
-void updateWatering(float atmosTemp, float substrateMoisture) {
-  float targetHumidity;
-  getSubstrateMoistureTarget(atmosTemp, targetHumidity);
-  if (substrateMoisture < targetHumidity) {
-    controlPump(true);
-    controlRelay(true);
-  } else {
-    controlPump(false);
-    controlRelay(false);
-  }
 }
-*/

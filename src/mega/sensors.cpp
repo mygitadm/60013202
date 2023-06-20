@@ -1,6 +1,11 @@
 #include <Arduino.h>
 #include "sensors.h"
 
+
+#define N 10 // Number of measurements to average
+float measurements[N] = {0};
+int current_index = 0;
+
 char tempBuffer[TEMP_BUFFER_SIZE];
 char humidBuffer[HUMID_BUFFER_SIZE];
 char tempSubstrateBuffer[SUBSTRATE_SENSOR_BUFFER_SIZE];
@@ -73,6 +78,17 @@ void getSubstrateMoisture(float &substrateMoisture)
   substrateMoisture = map(substrateMoistureValue, AirValue, WaterValue, 0, 100);
   substrateMoisture = constrain(substrateMoisture, 0, 100);
 
+  // Add the new measurement to the array and update the index
+  measurements[current_index] = substrateMoisture;
+  current_index = (current_index + 1) % N;
+
+  // Compute the moving average
+  float sum = 0;
+  for (int i = 0; i < N; i++) {
+    sum += measurements[i];
+  }
+  substrateMoisture = sum / N;
+
   // Use the new function to format the sensor data
   formatSensorData(substrateMoisture, substrateMoistureBuffer, "%");
 }
@@ -91,8 +107,6 @@ void getSubstrateMoistureTarget(float atmosTemp, float &targetMoisture) {
   }
   formatSensorData(targetMoisture, substrateMoistureTargetBuffer, "%");
 }
-
-
 
 void getOPT3001Data(float &lightIntensity)
 {

@@ -6,6 +6,7 @@
 #include <DallasTemperature.h>
 #include <Adafruit_BME280.h>
 #include <ClosedCube_OPT3001.h>
+#include <PID_v1.h>
 
 //opt3001
 extern ClosedCube_OPT3001 opt3001;
@@ -68,5 +69,9 @@ void getOPT3001Data(float &lightIntensity);
 void configureOPT3001Sensor();
 //void printResult();
 //void printError();
+
+
+extern double Input;
+extern double Setpoint;
 
 #endif // SENSORS_H
