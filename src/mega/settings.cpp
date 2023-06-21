@@ -29,5 +29,5 @@
     int minHumidityFruitBearing = 60; 
     int maxHumidityFruitBearing = 80; 
 
-    int currentGrowthStage = 1; // Start at seedling stage 1-Seedling stage, 2-Vegetative stage,3-Fruit-bearing stage
+    int currentGrowthStage = 2; // Start at seedling stage 1-Seedling stage, 2-Vegetative stage,3-Fruit-bearing stage
 

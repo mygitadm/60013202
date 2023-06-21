@@ -34,53 +34,53 @@ void setup()
   delay(1000);
 }
 
-void loop()
-{
-  time_t timestamp = now();
-  unsigned long currentTime = millis();
-  getDateTime();
-  float atmosTemp, atmosHumidity; 
-  getBME280Data(atmosTemp, atmosHumidity);
-  float substrateTemp, solutionTemp; 
-  getDS18B20Data(substrateTemp, solutionTemp);
-  float substrateMoisture;
-  getSubstrateMoisture(substrateMoisture);
-  
-  float lightIntensity;
-  getOPT3001Data(lightIntensity);
-  /*Serial.print("Light Intensity: ");
-  Serial.print(lightIntensity);
-  Serial.println(" lux");*/
-
-  float substrateMoistureTarget;
-  //getSubstrateMoistureTarget(atmosTemp, substrateMoistureTarget);
-  getSubstrateMoistureTarget(atmosTemp, lightIntensity, substrateMoistureTarget);
-  
-  //updateWatering(atmosTemp, substrateMoisture);
-  updateWatering(atmosTemp, substrateMoisture, lightIntensity);
-
-  updateDisplay();
-
-  if (Serial1.available())
+  void loop()
   {
-    String input = Serial1.readStringUntil('\n');
-    input.trim();
+    time_t timestamp = now();
+    unsigned long currentTime = millis();
+    getDateTime();
+    float atmosTemp, atmosHumidity; 
+    getBME280Data(atmosTemp, atmosHumidity);
+    float substrateTemp, solutionTemp; 
+    getDS18B20Data(substrateTemp, solutionTemp);
+    float substrateMoisture;
+    getSubstrateMoisture(substrateMoisture);
+    
+    float lightIntensity;
+    getOPT3001Data(lightIntensity);
+    /*Serial.print("Light Intensity: ");
+    Serial.print(lightIntensity);
+    Serial.println(" lux");*/
 
-    if (input == "{\"request\": \"realtime\"}")
+    float substrateMoistureTarget;
+    //getSubstrateMoistureTarget(atmosTemp, substrateMoistureTarget);
+    getSubstrateMoistureTarget(atmosTemp, lightIntensity, substrateMoistureTarget);
+    
+    //updateWatering(atmosTemp, substrateMoisture);
+    updateWatering(atmosTemp, substrateMoisture, lightIntensity);
+
+    updateDisplay();
+
+    if (Serial1.available())
     {
-      transmitData(timestamp, solutionTemp, substrateTemp, substrateMoisture, atmosTemp, atmosHumidity);
-    }
+      String input = Serial1.readStringUntil('\n');
+      input.trim();
 
-    else if (input == "GET_CONFIG") {
-      transmitConfig();
+      if (input == "{\"request\": \"realtime\"}")
+      {
+        transmitData(timestamp, solutionTemp, substrateTemp, substrateMoisture, atmosTemp, atmosHumidity);
+      }
+
+      else if (input == "GET_CONFIG") {
+        transmitConfig();
+      }
+      else if (input == "{\"request\": \"historical\"}") {
+        transmitDataHistorical(timestamp, solutionTemp, substrateTemp, substrateMoisture, atmosTemp, atmosHumidity);
+      }
     }
-    else if (input == "{\"request\": \"historical\"}") {
-      transmitDataHistorical(timestamp, solutionTemp, substrateTemp, substrateMoisture, atmosTemp, atmosHumidity);
+    if (currentTime - lastLogTime >= logInterval)
+    {
+      logDataToSD(timestamp, solutionTemp, substrateTemp, substrateMoisture, atmosTemp, atmosHumidity, lightIntensity);
+      lastLogTime = currentTime;
     }
   }
-  if (currentTime - lastLogTime >= logInterval)
-  {
-    logDataToSD(timestamp, solutionTemp, substrateTemp, substrateMoisture, atmosTemp, atmosHumidity);
-    lastLogTime = currentTime;
-  }
-}
