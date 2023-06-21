@@ -42,7 +42,7 @@ extern char tempSubstrateBuffer[SUBSTRATE_SENSOR_BUFFER_SIZE];
 extern char tempSolutionBuffer[SOLUTION_SENSOR_BUFFER_SIZE];
 
 // Define the size of substrate moisture buffer for capacitive moisture sensor
-const uint8_t SUBSTRATE_MOISTURE_BUFFER_SIZE = 7; // including space for units and null terminator
+const uint8_t SUBSTRATE_MOISTURE_BUFFER_SIZE = 8; // including space for units and null terminator
 extern char substrateMoistureBuffer[SUBSTRATE_MOISTURE_BUFFER_SIZE];
 
 // Define the size of the target moisture buffer
@@ -50,7 +50,7 @@ const uint8_t SUBSTRATE_MOISTURE_TARGET_BUFFER_SIZE = 7; // including space for 
 extern char substrateMoistureTargetBuffer[SUBSTRATE_MOISTURE_TARGET_BUFFER_SIZE];
 
 // Define the size of the light intensuty buffer
-const uint8_t LIGHTINTENSITY_BUFFER_SIZE = 10; // Adjust as needed
+const uint8_t LIGHTINTENSITY_BUFFER_SIZE = 12; // Adjust as needed
 extern char lightIntensityBuffer[LIGHTINTENSITY_BUFFER_SIZE];
 
 // Objects for handling sensors

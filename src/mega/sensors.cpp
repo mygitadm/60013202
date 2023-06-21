@@ -133,41 +133,6 @@ void getSubstrateMoistureTarget(float atmosTemp, float lightIntensity, float &ta
   formatSensorData(targetMoisture, substrateMoistureTargetBuffer, "%");
 }
 
-/*
-void getSubstrateMoistureTarget(float atmosTemp, float &targetMoisture) {
-  if (atmosTemp <= minTemp) {
-    targetMoisture = minHumidity;
-  } else if (atmosTemp >= maxTemp) {
-    targetMoisture = maxHumidity;
-  } else {
-    targetMoisture = minHumidity + (maxHumidity - minHumidity) * ((atmosTemp - minTemp) / (maxTemp - minTemp));
-  }
-  formatSensorData(targetMoisture, substrateMoistureTargetBuffer, "%");
-}
-*/
-/*
-void getSubstrateMoistureTarget(float atmosTemp, float lightIntensity, float &targetMoisture) {
-  // Calculate the target humidity based on temperature as before
-  float targetHumidityTemp;
-  if (atmosTemp <= minTemp) {
-    targetHumidityTemp = minHumidity;
-  } else if (atmosTemp >= maxTemp) {
-    targetHumidityTemp = maxHumidity;
-  } else {
-    targetHumidityTemp = minHumidity + (maxHumidity - minHumidity) * ((atmosTemp - minTemp) / (maxTemp - minTemp));
-  }
-
-  // Now calculate the target humidity based on light intensity
-  float targetHumidityLight = minHumidity + (maxHumidity - minHumidity) * (lightIntensity / 10000.0);
-
-	// Combine the two target humidities by taking a weighted average
-	targetMoisture = 0.7 * targetHumidityTemp + 0.3 * targetHumidityLight;
-
-
-  formatSensorData(targetMoisture, substrateMoistureTargetBuffer, "%");
-}
-
-*/
 
 void getOPT3001Data(float &lightIntensity)
 {
