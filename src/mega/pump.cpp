@@ -2,7 +2,11 @@
 #include "sensors.h"
 #include "datalog.h"
 #include <TimeLib.h>
+#include <PID_v1.h>
 
+double Setpoint, Input, Output;
+double Kp=1, Ki=0, Kd=0;
+PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 
 
@@ -23,6 +27,10 @@ void setupPump() {
   
   // Set default speed to 100%
   analogWrite(MOTOR_SPEED_PIN, 255);
+
+   // Initialize PID
+  myPID.SetMode(AUTOMATIC);
+  myPID.SetOutputLimits(0, 255); // This depends on the range of your pump
 }
 
 
@@ -43,7 +51,53 @@ void controlRelay(bool state) {
     digitalWrite(relayPin, LOW); // Turn OFF the relay
   }
 }
+void updateWatering(float atmosTemp, float substrateMoisture, float lightIntensity) {
+  float targetHumidity;
+  float hysteresis = 3.0; // Adjust as needed
+  static float initialMoisture; // Store the initial moisture level
+  static bool pumpState = false; // Keep track of the pump state
+  static unsigned long pumpOffTime = 0; // Store the last time the pump was turned off
+  unsigned long currentTime = millis(); // Get the current time
 
+  getSubstrateMoistureTarget(atmosTemp, lightIntensity, targetHumidity);
+
+  if (currentTime - startTime > 30000) { // Wait for 5 seconds after reboot
+    // Existing pump control logic
+    if (!pumpState && substrateMoisture < targetHumidity - hysteresis && currentTime - pumpOffTime >= 60000) { // Wait at least 10 seconds after the pump was last turned off
+      controlPump(true);
+      //controlRelay(true);
+      pumpState = true;
+      initialMoisture = substrateMoisture; // Store the initial moisture level
+      Serial.print("Target Moisture: ");
+      Serial.println(targetHumidity);
+      Serial.print("Pump turned ON at humidity: ");
+      Serial.println(substrateMoisture);
+
+      // Get the current solution and substrate temperatures
+      float solutionTemp, substrateTemp;
+      getDS18B20Data(solutionTemp, substrateTemp);
+
+      // Get the current atmospheric temperature and humidity
+      float atmosTemp, atmosHumidity;
+      getBME280Data(atmosTemp, atmosHumidity);
+
+      // Log the data
+      logPumpDataToSD(currentTime, solutionTemp, substrateTemp, atmosTemp, atmosHumidity, substrateMoisture, lightIntensity);
+    } else if (pumpState && substrateMoisture >= initialMoisture + 2) { // Compare the current moisture level to the initial one
+      controlPump(false);
+      //controlRelay(false);
+      pumpState = false;
+      pumpOffTime = currentTime; // Save the time when the pump was turned off
+      Serial.print("Target Moisture: ");
+      Serial.println(targetHumidity);
+      Serial.print("Pump turned OFF at humidity: ");
+      Serial.println(substrateMoisture);
+    }
+  }
+}
+
+
+/* v3 main code for updateWatering
 void updateWatering(float atmosTemp, float substrateMoisture, float lightIntensity) {
   float targetHumidity;
   float hysteresis = 3.0; // Adjust as needed
@@ -85,7 +139,7 @@ Serial.println(atmosHumidity);
     }
   }
 }
-
+*/
 /* v2
 void updateWatering(float atmosTemp, float substrateMoisture, float lightIntensity) {
   float targetHumidity;
