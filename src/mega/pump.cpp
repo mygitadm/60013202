@@ -51,12 +51,63 @@ void controlRelay(bool state) {
     digitalWrite(relayPin, LOW); // Turn OFF the relay
   }
 }
+
+void updateWatering(float atmosTemp, float substrateMoisture, float lightIntensity) {
+  const unsigned long pumpInterval = 5000; // Time for the pump to be ON in milliseconds
+  const unsigned long pauseInterval = 60000; // Pause time in milliseconds
+  static unsigned long lastPumpStartTime = 0; // Time when pump was last turned ON
+
+  float targetHumidity;
+  float hysteresis = 3.0;
+  static float initialMoisture;
+  static bool pumpState = false;
+  unsigned long currentTime = millis();
+
+  getSubstrateMoistureTarget(atmosTemp, lightIntensity, targetHumidity);
+
+  if(currentTime - startTime > 30000) {
+    if(!pumpState && substrateMoisture < targetHumidity - hysteresis && currentTime - lastPumpStartTime >= pauseInterval) {
+      controlPump(true);
+      lastPumpStartTime = currentTime;
+      pumpState = true;
+      initialMoisture = substrateMoisture;
+      Serial.print("Target Moisture: ");
+      Serial.println(targetHumidity);
+      Serial.print("Pump turned ON at humidity: ");
+      Serial.println(substrateMoisture);
+
+      float solutionTemp, substrateTemp;
+      getDS18B20Data(solutionTemp, substrateTemp);
+
+      float atmosTemp, atmosHumidity;
+      getBME280Data(atmosTemp, atmosHumidity);
+
+      logPumpDataToSD(currentTime, solutionTemp, substrateTemp, atmosTemp, atmosHumidity, substrateMoisture, lightIntensity);
+    } 
+    else if(pumpState && (currentTime - lastPumpStartTime >= pumpInterval || substrateMoisture >= initialMoisture + 2)) {
+      controlPump(false);
+      pumpState = false;
+      Serial.print("Target Moisture: ");
+      Serial.println(targetHumidity);
+      Serial.print("Pump turned OFF at humidity: ");
+      Serial.println(substrateMoisture);
+    }
+  }
+}
+
+
+/*
+v4
 void updateWatering(float atmosTemp, float substrateMoisture, float lightIntensity) {
   float targetHumidity;
   float hysteresis = 3.0; // Adjust as needed
+
   static float initialMoisture; // Store the initial moisture level
   static bool pumpState = false; // Keep track of the pump state
+
   static unsigned long pumpOffTime = 0; // Store the last time the pump was turned off
+ 
+
   unsigned long currentTime = millis(); // Get the current time
 
   getSubstrateMoistureTarget(atmosTemp, lightIntensity, targetHumidity);
@@ -96,7 +147,7 @@ void updateWatering(float atmosTemp, float substrateMoisture, float lightIntensi
   }
 }
 
-
+*/
 /* v3 main code for updateWatering
 void updateWatering(float atmosTemp, float substrateMoisture, float lightIntensity) {
   float targetHumidity;

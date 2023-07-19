@@ -22,12 +22,12 @@
     const float maxLightIntensity = 1000.0; // replace with the maximum light intensity for humidity regulation
 
     // Humidity settings for each growth stage
-    int minHumiditySeedling = 20; 
-    int maxHumiditySeedling = 40; 
-    int minHumidityVegetative = 30; 
-    int maxHumidityVegetative = 50; 
-    int minHumidityFruitBearing = 40; 
-    int maxHumidityFruitBearing = 60; 
+    int minHumiditySeedling = 30; 
+    int maxHumiditySeedling = 50; 
+    int minHumidityVegetative = 40; 
+    int maxHumidityVegetative = 60; 
+    int minHumidityFruitBearing = 50; 
+    int maxHumidityFruitBearing = 70; 
 
-    int currentGrowthStage = 2; // Start at seedling stage 1-Seedling stage, 2-Vegetative stage,3-Fruit-bearing stage
+    int currentGrowthStage = 3; // Start at seedling stage 1-Seedling stage, 2-Vegetative stage,3-Fruit-bearing stage
 
